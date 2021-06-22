@@ -25,7 +25,7 @@ class CreateMessageView(ModelViewSet):
         id = request.user.id
         token = request.META['HTTP_AUTHORIZATION']
         headers = {"Authorization" : f'{token}'}
-        r = requests.get(f'https://contact-dot-heroic-climber-277222.df.r.appspot.com/api/contact/{id}', headers=headers)
+        r = requests.get(f'https://abstract-user-dot-heroic-climber-277222.df.r.appspot.com/user/list/{id}', headers=headers)
 
         data = r.json()#['results']
         first_name = data['firstName']
@@ -46,13 +46,10 @@ class CreateMessageView(ModelViewSet):
 
 class MessageView(ModelViewSet):
     queryset = Message.objects.filter(threadId__isnull=True)
-    
     serializer_class = MessageSerializer
     lookup_field = 'group_id'
     http_method_names = ['get','list', 'delete', 'put']
     filterset_fields = ['name',]
-    
-    
     
     
     def list(self, request, *args, **kwargs):
@@ -70,7 +67,8 @@ class MessageView(ModelViewSet):
                 id = request.user.id
                 token = request.META['HTTP_AUTHORIZATION']
                 headers = {"Authorization" : f'{token}'}
-                r = requests.get(f'https://contact-dot-heroic-climber-277222.df.r.appspot.com/api/contact/{id}', headers=headers)
+
+                r = requests.get(f'https://abstract-user-dot-heroic-climber-277222.df.r.appspot.com/user/list/{id}', headers=headers)
 
                 user = r.json()#['results']
                 replies = []
@@ -121,6 +119,7 @@ class MessageView(ModelViewSet):
             return Response(data)
         except Exception:
             return Response('No Bearer Token passed')
+
     def retrieve(self, request, *args, **kwargs):
         values = []
         # instance = self.get_object()
@@ -153,7 +152,7 @@ class MessageView(ModelViewSet):
                 replies = []
                 id = d['userId']
                 
-                r = requests.get(f'https://contact-dot-heroic-climber-277222.df.r.appspot.com/api/contact/{id}', headers=headers)
+                r = requests.get(f'https://abstract-user-dot-heroic-climber-277222.df.r.appspot.com/user/list/{id}', headers=headers)
                 
                 user = r.json()
                 children = Message.objects.all().filter(threadId=d['id'])
@@ -216,7 +215,7 @@ def show_group_member(request, pk):
         user_list.append(g['contact_id'])
 
     for u in user_list:
-        user = requests.get(f'https://contact-dot-heroic-climber-277222.df.r.appspot.com/api/contact/{u}', headers=headers)
+        user = requests.get(f'https://abstract-user-dot-heroic-climber-277222.df.r.appspot.com/user/list/{u}', headers=headers)
         data = user.json()
         list.append(data)
     x = 0  
@@ -280,7 +279,7 @@ class GroupMember(generics.ListAPIView):
             user_list.append(g['contact_id'])
 
         for u in user_list:
-            user = requests.get(f'https://contact-dot-heroic-climber-277222.df.r.appspot.com/api/contact/{u}', headers=headers)
+            user = requests.get(f'https://abstract-user-dot-heroic-climber-277222.df.r.appspot.com/user/list/{u}', headers=headers)
             data = user.json()
             list.append(data)
         x = 0  
@@ -343,7 +342,7 @@ def get_thread(request,pk):
     for d in data:
         id = d.name
                 
-        r = requests.get(f'https://contact-dot-heroic-climber-277222.df.r.appspot.com/api/contact/{id}', headers=headers)
+        r = requests.get(f'https://abstract-user-dot-heroic-climber-277222.df.r.appspot.com/user/list/{id}', headers=headers)
 
         user = r.json()#['results']
         response.append({
